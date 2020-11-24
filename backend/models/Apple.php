@@ -16,6 +16,17 @@ use Yii;
  */
 class Apple extends \yii\db\ActiveRecord
 {
+    public const _status = [
+        'in_tree' => 'На дереве',
+        'in_earth' => 'Упало',
+        'rotten' => 'Гнилое яблоко'
+    ];
+
+    public const status = [
+        'in_tree' => 'in_tree',
+        'in_earth' => 'in_earth',
+        'rotten' => 'rotten'
+    ];
     /**
      * {@inheritdoc}
      */
@@ -30,7 +41,7 @@ class Apple extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['color', 'seen_time', 'fall_time', 'status', 'eating_amount'], 'required'],
+            [['color', 'seen_time', 'status', 'eating_amount'], 'required'],
             [['seen_time', 'fall_time'], 'safe'],
             [['eating_amount'], 'integer'],
             [['color', 'status'], 'string', 'max' => 50],
@@ -51,4 +62,22 @@ class Apple extends \yii\db\ActiveRecord
             'eating_amount' => 'Сколько съели (%)',
         ];
     }
+
+    private function randomDate(){
+        $time = rand( 0, time() );
+        return date("d-m-Y H:i:s", $time);
+    }
+
+    public function __construct(string $color)
+    {
+        $config = [
+            'color' => $color,
+            'status' => self::status['in_tree'],
+            'eating_amount' => 0,
+            'seen_time' => $this->randomDate()
+        ];
+        parent::__construct($config);
+    }
+
+
 }
