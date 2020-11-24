@@ -63,6 +63,10 @@ class Apple extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * Generates random date
+     * @return false|string
+     */
     private function randomDate(){
         $time = rand( 0, time() );
         return date("d-m-Y H:i:s", $time);
@@ -77,6 +81,20 @@ class Apple extends \yii\db\ActiveRecord
             'seen_time' => $this->randomDate()
         ];
         parent::__construct($config);
+    }
+
+    public function eat(int $amount){
+        if ($this->status === self::status['in_tree'])
+            return new \Error('Ты не можешь есть это яблоко. Потому что это на дереве.');
+
+        if ($this->status === self::status['rotten'])
+            return new \Error('Ты не можешь есть это яблоко. Потому что он гнилой.');
+
+        $this->eating_amount = $this->eating_amount + $amount;
+        if ($this->eating_amount > 100)
+            $this->eating_amount = 100;
+
+        $this->save();
     }
 
 
