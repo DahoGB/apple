@@ -29,7 +29,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'apple', 'eat', 'fall'],
+                        'actions' => ['logout', 'index', 'apple', 'eat', 'fall', 'create'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -110,8 +110,12 @@ class SiteController extends Controller
     public function actionEat($id){
         $apple = Apple::findOne($id);
         $model = new EatForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate() === true) {
-            return 'gyhu';
+        if ($apple->checkRotten())
+            $this->redirect('/backend/web/index.php?r=site/apple');
+
+        if ( $model->load(Yii::$app->request->post()) && $model->validate() === true) {
+            $apple->eat($model->eating_amount);
+            $this->redirect('/backend/web/index.php?r=site/apple');
         } else {
             return $this->render('eat', [
                 'apple' => $apple,
@@ -126,5 +130,16 @@ class SiteController extends Controller
         $apple->fallToGround();
         $apple->save();
         $this->redirect('/backend/web/index.php?r=site/apple');
+    }
+
+    public function actionCreate(){
+        $apple = new Apple();
+        if ($apple->load(Yii::$app->request->post()) && $apple->save()) {
+            $this->redirect('/backend/web/index.php?r=site/apple');
+        } else {
+            return $this->render('create', [
+                'apple' => $apple
+            ]);
+        }
     }
 }

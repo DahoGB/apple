@@ -96,8 +96,6 @@ class Apple extends \yii\db\ActiveRecord
         if ($this->status === self::status['in_tree'])
             return new \Error('Ты не можешь есть это яблоко. Потому что это на дереве.');
 
-        if ($this->status === self::status['rotten'])
-            return new \Error('Ты не можешь есть это яблоко. Потому что он гнилой.');
 
         $this->eating_amount = $this->eating_amount + $amount;
         if ($this->eating_amount > 100)
@@ -106,6 +104,20 @@ class Apple extends \yii\db\ActiveRecord
         $this->size = (100 - $this->eating_amount) / 100;
 
         $this->save();
+    }
+
+
+    /**
+     *
+     * @return bool
+     */
+    public function checkRotten(){
+        if (strtotime($this->fall_time) + 60 * 60 * 5 <= time()) {
+            $this->status = self::status['rotten'];
+            $this->save();
+            return true;
+        }
+        return false;
     }
 
     public function fallToGround(){

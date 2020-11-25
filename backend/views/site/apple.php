@@ -67,7 +67,15 @@ $columns = [
         ]
     ],
 ];
+echo  Html::a(HTML::tag('i', '', [
+    'class' => 'glyphicon glyphicon-plus',
+    'title' => 'Добавьте яблоки',
+]),
+    '/backend/web/index.php?r=site/create', [
+        'class' => 'btn btn-primary',
 
+
+    ]);
 echo \yii\grid\GridView::widget([
         'dataProvider' => $dataProvider,
     'columns' => $columns

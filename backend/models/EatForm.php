@@ -11,11 +11,11 @@ class EatForm extends Model
 {
     public $eating_amount;
 
-    public function validate($attributeNames = null, $clearErrors = true)
+    public function rules()
     {
         return [
-            ['eating_amount', 'integer', 'max' => 100, 'min' => 1],
-            ['eating_amount', 'required']
+            [['eating_amount'], 'integer', 'max' => 100, 'min' => 1],
+            [['eating_amount'], 'required']
         ];
     }
 
