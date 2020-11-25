@@ -26,7 +26,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index'],
+                        'actions' => ['logout', 'index', 'apple', 'eat'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -98,5 +98,13 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
+    }
+
+    public function actionApple(){
+        return $this->render('apple');
+    }
+
+    public function actionEat(){
+        return 'Eat';
     }
 }
