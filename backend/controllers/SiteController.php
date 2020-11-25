@@ -1,7 +1,10 @@
 <?php
 namespace backend\controllers;
 
+use app\models\Apple;
+use app\models\EatForm;
 use Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
@@ -26,7 +29,7 @@ class SiteController extends Controller
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['logout', 'index', 'apple', 'eat'],
+                        'actions' => ['logout', 'index', 'apple', 'eat', 'fall'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -104,7 +107,24 @@ class SiteController extends Controller
         return $this->render('apple');
     }
 
-    public function actionEat(){
-        return 'Eat';
+    public function actionEat($id){
+        $apple = Apple::findOne($id);
+        $model = new EatForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate() === true) {
+            return 'gyhu';
+        } else {
+            return $this->render('eat', [
+                'apple' => $apple,
+                'model' => $model,
+            ]);
+        }
+
+    }
+
+    public function actionFall($id){
+        $apple = Apple::findOne($id);
+        $apple->fallToGround();
+        $apple->save();
+        $this->redirect('/backend/web/index.php?r=site/apple');
     }
 }
